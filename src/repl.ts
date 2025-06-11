@@ -1,15 +1,12 @@
-import readline from "readline";
-import { getCommands } from "./commands.js";
+import { State } from "./state.js";
+
 export function cleanInput(input: string): string[] {
   return input.toLocaleLowerCase().trim().split(" ");
 }
 
-export function startREPL() {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    prompt: "Pokedex > ",
-  });
+export function startREPL(state: State) {
+  const rl = state.rl;
+  const commands = state.commands;
 
   rl.prompt();
 
@@ -20,7 +17,7 @@ export function startREPL() {
       return;
     }
     const commandName = cleanedInput[0];
-    const commands = getCommands();
+    
     const cmd = commands[commandName];
     
     if(!cmd) {
@@ -30,7 +27,7 @@ export function startREPL() {
     }
 
     try {
-      cmd.callback(commands);
+      cmd.callback(state);
     } catch(error) {
       console.log(error);
     }

@@ -1,14 +1,9 @@
-import readline from "readline";
-import { getCommands } from "./commands.js";
 export function cleanInput(input) {
     return input.toLocaleLowerCase().trim().split(" ");
 }
-export function startREPL() {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-        prompt: "Pokedex > ",
-    });
+export function startREPL(state) {
+    const rl = state.rl;
+    const commands = state.commands;
     rl.prompt();
     rl.on("line", (line) => {
         const cleanedInput = cleanInput(line);
@@ -17,17 +12,14 @@ export function startREPL() {
             return;
         }
         const commandName = cleanedInput[0];
-        const commands = getCommands();
-        console.log(commands);
         const cmd = commands[commandName];
-        console.log(cmd);
         if (!cmd) {
             console.log(`Unknown command: ${commandName}. Type 'help' for a list of commands.`);
             rl.prompt();
             return;
         }
         try {
-            cmd.callback(commands);
+            cmd.callback(state);
         }
         catch (error) {
             console.log(error);
