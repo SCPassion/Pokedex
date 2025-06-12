@@ -14,7 +14,6 @@ export function startREPL(state) {
         const commandName = cleanedInput[0];
         const cmd = commands[commandName];
         if (!cmd) {
-            console.log(`Unknown command: ${commandName}. Type 'help' for a list of commands.`);
             rl.prompt();
             return;
         }
@@ -24,6 +23,5 @@ export function startREPL(state) {
         catch (error) {
             console.log(error);
         }
-        rl.prompt();
     });
 }

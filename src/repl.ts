@@ -21,7 +21,6 @@ export function startREPL(state: State) {
     const cmd = commands[commandName];
     
     if(!cmd) {
-      console.log(`Unknown command: ${commandName}. Type 'help' for a list of commands.`);
       rl.prompt();
       return;
     }
@@ -32,6 +31,5 @@ export function startREPL(state: State) {
       console.log(error);
     }
 
-    rl.prompt();
 });
 }
