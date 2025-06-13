@@ -1,5 +1,6 @@
 import { cleanInput } from "./repl";
 import { describe, expect, test } from "vitest";
+import { Cache } from "./pokecache.js";
 describe.each([
     // Here you can define the input and expected output pairs for the cleanInput function
     {
@@ -22,4 +23,22 @@ describe.each([
     test(`Input: ${input}`, () => {
         expect(input).toBeTypeOf("string");
     });
+});
+test.concurrent.each([{
+        key: "https://example.com",
+        val: "testdata",
+        interval: 500,
+    }, {
+        key: "https://example.com/path",
+        val: "moretestdata",
+        interval: 1000,
+    }])("Test caching $Interval ms", async ({ key, val, interval }) => {
+    const cache = new Cache(interval);
+    cache.add(key, val);
+    const cachedValue = cache.get(key);
+    expect(cachedValue).toBe(val);
+    await new Promise(resolve => setTimeout(resolve, interval + 100));
+    const expiredValue = cache.get(key);
+    expect(expiredValue).toBeUndefined();
+    cache.stopReapLoop();
 });
